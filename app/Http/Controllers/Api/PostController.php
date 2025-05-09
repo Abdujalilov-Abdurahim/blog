@@ -24,9 +24,9 @@ class PostController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StorePostRequest $request, PostResource $postResource)
+    public function store(StorePostRequest $request, PostService $postService)
     {
-        $post = $postResource->createPost($request->validated());
+        return new PostResource($postService->createPost($request->validated()));
     }
 
     /**
@@ -43,6 +43,7 @@ class PostController extends Controller
     public function update(UpdatePostRequest $request, Post $post, PostService $postService)
     {
         $post = $postService->updatePost($request->validated(), $post);
+        return new PostResource($post);
     }
 
     /**
