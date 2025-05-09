@@ -18,6 +18,9 @@ class PostController extends Controller
     public function index()
     {     
         // Return a collection of posts as a resource
+        // Paginate the posts
+        // Return the paginated posts as a resource collection
+        // Use the PostResource to transform the data
         return PostResource::collection(Post::paginate(10));
     }
 
@@ -26,19 +29,16 @@ class PostController extends Controller
      */
     public function store(StorePostRequest $request, PostService $postService)
     {
+        // Create a new post
+        // Create the post using the PostService
         return new PostResource($postService->createPost($request->validated()));
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(Post $post)
     {
-        // Show a specific post by ID
-        $post = Post::find($id);
-        if (!$post) {
-            return response()->json(['message' => 'Post not found'], 404);
-        }
         // Return the post as a resource
         return new PostResource($post);
     }
@@ -48,6 +48,7 @@ class PostController extends Controller
      */
     public function update(UpdatePostRequest $request, Post $post, PostService $postService)
     {
+        // Update the post
         $post = $postService->updatePost($request->validated(), $post);
         return new PostResource($post);
     }
@@ -57,11 +58,7 @@ class PostController extends Controller
      */
     public function destroy(Post $post, PostService $postService)
     {
-    // Check if the post exists
-    if (!$post) {
-        return response()->json(['message' => 'Post not found'], 404);
-    }
-    
+        // Delete the post
     $postService->deletePost($post);
         return response()->json(['message' => 'Post deleted successfully'], 200);   
     }
