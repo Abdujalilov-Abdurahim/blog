@@ -34,7 +34,13 @@ class PostController extends Controller
      */
     public function show(string $id)
     {
-        return new PostResource(Post::findOrFail($id));
+        // Show a specific post by ID
+        $post = Post::find($id);
+        if (!$post) {
+            return response()->json(['message' => 'Post not found'], 404);
+        }
+        // Return the post as a resource
+        return new PostResource($post);
     }
 
     /**
@@ -51,7 +57,12 @@ class PostController extends Controller
      */
     public function destroy(Post $post, PostService $postService)
     {
-        $postService->deletePost($post);
+    // Check if the post exists
+    if (!$post) {
+        return response()->json(['message' => 'Post not found'], 404);
+    }
+    
+    $postService->deletePost($post);
         return response()->json(['message' => 'Post deleted successfully'], 200);   
     }
 }
